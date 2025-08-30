@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Visual Product Matcher</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* layout polish */
+    .hero {background:linear-gradient(135deg,#f8fafc,#eef2ff); border:1px solid #e5e7eb}
+    .badge-soft {background:#eef2ff;color:#3730a3}
+    .min-range-wrap{max-width:360px}
+    .form-range.form-range-sm{height:.35rem}
+    .form-range.form-range-sm::-webkit-slider-thumb{width:.8rem;height:.8rem}
+    .form-range.form-range-sm::-moz-range-thumb{width:12px;height:12px}
+    .hint{font-size:.85rem;color:#6b7280}
+
+    /* result cards */
+    .result-card{border-radius:1rem; overflow:hidden; transition:transform .15s, box-shadow .15s}
+    .result-card:hover{transform:translateY(-2px); box-shadow:0 .75rem 1.5rem rgba(0,0,0,.08)}
+    .result-img{aspect-ratio:1/1; object-fit:cover; background:#f8fafc}
+    .category-pill{font-size:.75rem; padding:.25rem .55rem; border-radius:999px; background:#f1f5f9; color:#64748b}
+
+    /* score visuals */
+    .score-badge{position:absolute; top:.5rem; right:.5rem; padding:.25rem .55rem; border-radius:999px; font-weight:700; font-size:.85rem; color:#fff; box-shadow:0 .25rem .75rem rgba(0,0,0,.15)}
+    .score-high{background:linear-gradient(135deg,#22c55e,#16a34a)}     /* ≥ 80% */
+    .score-mid{ background:linear-gradient(135deg,#f59e0b,#d97706)}     /* 50–79% */
+    .score-low{ background:linear-gradient(135deg,#64748b,#334155)}     /* < 50% */
+    .progress.progress-slim{height:8px; border-radius:999px; background:#eef2f7}
+  </style>
+</head>
+
+<body class="bg-light">
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="hero rounded-3 p-3 mb-3 d-flex flex-wrap align-items-center justify-content-between">
+    <div>
+      <h1 class="h3 mb-1">Visual Product Matcher</h1>
+      <p class="mb-0 hint">Upload an image or paste a URL to find visually similar products.</p>
+    </div>
+    {% if catalog_size %}
+      <span class="badge badge-soft rounded-pill px-3 py-2 mt-2 mt-sm-0">Dataset: {{ catalog_size }} items</span>
+    {% endif %}
+  </div>
+
+  <!-- Form -->
+  <form id="searchForm" method="POST" enctype="multipart/form-data" class="card p-3 mb-4" autocomplete="off" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Upload Image</label>
+        <input type="file" name="imageFile" accept="image/*" class="form-control"/>
+        <div class="hint mt-1">Clear, well-lit images work best.</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Or Image URL / Local path</label>
+        <input type="text" name="imageUrl" placeholder="https://... or static/images/prod_1.jpg" class="form-control" inputmode="url"/>
+        <div class="hint mt-1">We’ll proxy & cache remote images for reliability.</div>
+      </div>
+
+      <div class="col-12 col-md-6 min-range-wrap">
+        <label class="form-label small mb-1">Min Similarity (floor 0.50)</label>
+        <input id="minRange" type="range" min="0.5" max="1" step="0.01" name="minScore"
+               value="{{ minScore|default(0.5) }}" class="form-range form-range-sm"/>
+        <div class="small">Current: <strong><output id="minOut">{{ '%.2f'|format(minScore|default(0.5)) }}</output></strong></div>
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button id="searchBtn" class="btn btn-primary">
+          Search
+          <span id="btnSpin" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+        </button>
+        <button type="reset" class="btn btn-outline-secondary">Reset</button>
+      </div>
+    </div>
+  </form>
+
+  {% if err %}
+    <div class="alert alert-danger">{{ err }}</div>
+  {% endif %}
+
+  {% if uploaded %}
+    <div class="mb-2">
+      <div class="small text-muted mb-1">Query image preview</div>
+      <img src="{{ uploaded }}" alt="query" class="img-fluid rounded border" style="max-height:280px;object-fit:contain"/>
+    </div>
+    <p class="text-muted small mb-3">Only showing matches ≥ <strong>0.50</strong>.</p>
+  {% endif %}
+
+  <!-- Results header -->
+  {% if results %}
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h2 class="h6 mb-0">Results</h2>
+      <span class="text-muted small">{{ results|length }} shown</span>
+    </div>
+  {% endif %}
+
+  <!-- Results grid -->
+  <div class="row g-3">
+    {% for p in results %}
+      {% set level = 'high' if p.score >= 0.80 else ('mid' if p.score >= 0.50 else 'low') %}
+      {% set bar = 'bg-success' if level == 'high' else ('bg-warning' if level == 'mid' else 'bg-secondary') %}
+      {# If app.py already proxified, use as-is; else proxy here #}
+      {% set already_prox = p.image_url.startswith('/img?src=') %}
+      {% set is_local = p.image_url.startswith('static/') or p.image_url.startswith('/') %}
+      {% set img_src = p.image_url if (already_prox or is_local) else ('/img?src=' ~ (p.image_url|urlencode)) %}
+
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 result-card">
+          <div class="position-relative">
+            <img src="{{ img_src }}" class="card-img-top result-img" alt="{{ p.name }}" loading="lazy"
+                 onerror="this.onerror=null;this.src='/static/placeholder.jpg';">
+            <span class="score-badge score-{{ level }}">{{ (p.score*100)|round(0) }}%</span>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title mb-1 text-truncate" title="{{ p.name }}">{{ p.name }}</h6>
+            <span class="category-pill">{{ p.category }}</span>
+
+            <div class="mt-3">
+              <div class="d-flex justify-content-between small">
+                <span>Match</span>
+                <strong>{{ '%.3f'|format(p.score) }}</strong>
+              </div>
+              <div class="progress progress-slim mt-1" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ (p.score*100)|round(0) }}">
+                <div class="progress-bar {{ bar }}" style="width: {{ (p.score*100)|round(0) }}%"></div>
+              </div>
+            </div>
+
+            {% if p.credit and p.credit.link %}
+              <div class="mt-2 small text-muted">Photo:
+                <a href="{{ p.credit.link }}" target="_blank" rel="noopener">
+                  {{ p.credit.photographer or 'Source' }}
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if not results and not err and uploaded %}
+    <div class="text-muted">No results at this similarity threshold. Try raising or lowering the slider (min 0.50).</div>
+  {% endif %}
+</div>
+
+<!-- Page overlay -->
+<div id="pageLoader" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+     style="background:rgba(255,255,255,.6); z-index:1050;">
+  <div class="position-absolute top-50 start-50 translate-middle d-flex align-items-center">
+    <div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+    <strong>Loading…</strong>
+  </div>
+</div>
+
+<script>
+  // Live slider output
+  const range = document.getElementById('minRange');
+  const out   = document.getElementById('minOut');
+  if (range && out) range.addEventListener('input', () => out.value = (+range.value).toFixed(2));
+
+  // Submit spinner + overlay
+  const form = document.getElementById('searchForm');
+  const btn  = document.getElementById('searchBtn');
+  const spin = document.getElementById('btnSpin');
+  const overlay = document.getElementById('pageLoader');
+
+  if (form && btn && spin) {
+    form.addEventListener('submit', () => {
+      btn.disabled = true;
+      spin.classList.remove('d-none');
+      overlay?.classList.remove('d-none');
+      requestAnimationFrame(() => {});
+    });
+  }
+  window.addEventListener('pageshow', () => {
+    btn?.removeAttribute('disabled');
+    spin?.classList.add('d-none');
+    overlay?.classList.add('d-none');
+  });
+</script>
+</body>
+</html>

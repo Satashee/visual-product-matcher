@@ -1,0 +1,9 @@
+flask
+gunicorn
+pillow
+requests
+numpy
+torch
+torchvision
+rembg
+onnxruntime
