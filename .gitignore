@@ -12,7 +12,6 @@ static/cache/
 **/checkpoints/
 
 # Generated datasets (we can rebuild)
-data/
 uploads/
 
 # Node / OS / editor clutter
