@@ -3,6 +3,7 @@ gunicorn
 pillow
 requests
 numpy
-torch
-torchvision
+torch==2.8.0+cpu
+torchvision==0.23.0+cpu
 onnxruntime
+--extra-index-url https://download.pytorch.org/whl/cpu
