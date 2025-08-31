@@ -18,10 +18,12 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 ## Demo Video
 [Watch the demo!!]
 <p align="center">
-  <video width="720" controls muted playsinline
-         src="https://raw.githubusercontent.com/Satashee/visual-product-matcher/main/Recording%202025-08-31%20150353.mp4?raw=1">
+  <video width="720" controls muted playsinline>
+    <source src="https://raw.githubusercontent.com/Satashee/visual-product-matcher/main/static/demo.mp4?raw=1" type="video/mp4">
+    Sorry, your browser doesn’t support embedded videos.
   </video>
 </p>
+
 
 
 
