@@ -14,6 +14,8 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
 </div>
+## Demo Video
+[Watch the demo]("C:\Users\91751\Videos\Recording 2025-08-31 150912.mp4")
 
 ---
 
