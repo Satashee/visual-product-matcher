@@ -19,7 +19,7 @@ parser.add_argument("--items", type=int, default=600, help="Target items to fetc
 parser.add_argument("--min-size", type=int, default=128, help="Skip images smaller than this (short side)")
 parser.add_argument("--max-items", type=int, default=800, help="Upper bound before embedding")
 parser.add_argument("--cap-per-category", type=int, default=0, help="0 = no cap")
-parser.add_argument("--backbone", choices=["resnet50","mobilenetv3"], default="resnet50")
+parser.add_argument("--backbone", choices=["resnet18","mobilenetv3"], default="resnet18")
 args = parser.parse_args()
 
 def get_backbone(name="mobilenetv3"):
