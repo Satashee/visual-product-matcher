@@ -3,7 +3,7 @@
 Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/MobileNet) + HSV color → two-stage search (feature top-K → color-aware re-rank) → clean Bootstrap UI with percent badges, progress bars, and a loading overlay.
 
 <p align="center">
-  <img alt="App screenshot" src="C:\Users\91751\Pictures\Screenshots\Screenshot 2025-08-31 150204.png" width="720">
+  <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
 </p>
 
 <div align="center">
