@@ -33,4 +33,20 @@ Upload an image (or paste a URL) → extract CNN features (ResNet50/MobileNet) +
 ---
 
 ## 🧱 Project structure
+visual-product-matcher/
+├─ app.py
+├─ precompute.py
+├─ requirements.txt
+├─ README.md
+├─ LICENSE
+├─ .gitignore
+├─ templates/
+│  └─ index.html
+├─ static/
+│  ├─ cache/                     # runtime image cache (gitignored)
+│  │  └─ .gitkeep
+│  └─ images/                    # optional local images for offline mode
+│     └─ .gitkeep
+└─ data/
+   └─ .gitkeep                   # keeps folder in git; products.json is generated
 
