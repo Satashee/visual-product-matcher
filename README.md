@@ -33,6 +33,7 @@ Upload an image (or paste a URL) → extract CNN features (ResNet50/MobileNet) +
 ---
 
 ## 🧱 Project structure
+```
 visual-product-matcher/
 ├─ app.py
 ├─ precompute.py
@@ -49,4 +50,4 @@ visual-product-matcher/
 │     └─ .gitkeep
 └─ data/
    └─ .gitkeep                   # keeps folder in git; products.json is generated
-
+```
