@@ -261,9 +261,24 @@ Multi-query voting (average embeddings across shots).
 PRs welcome!
 Please keep the app functional without private keys and avoid committing generated assets (data/products.json, caches). For UI/ranking changes, include a short before/after summary.
 
-### 📜 License
+##🧩 FAQ
 
-MIT — see LICENSE
-.
+Q: I get “No results” for everything.
+A: Check that data/products.json exists and isn’t empty. Re-run:
+```
+python precompute.py --online mixed --items 600
+```
 
-::contentReference[oaicite:0]{index=0}
+Also verify your uploaded/URL image is at least QUERY_MIN_SIDE pixels on the short edge, or reduce QUERY_MIN_SIDE in app.py.
+
+Q: Scores feel too strict / too loose.
+A: Lower or raise MIN_SHOW (e.g., 0.40 or 0.60). You can also tweak W_FEAT/W_COLOR.
+
+Q: Remote images don’t load.
+A: Some hosts block hotlinking or close connections. The /img proxy solves most cases. If it still fails, try another URL.
+
+Q: CPU vs GPU?
+A: This works on CPU. For GPU, install PyTorch with CUDA and it will run faster automatically.
+
+Q: I don’t want any background removal.
+A: It’s already disabled in the current version. We only square-crop + center to reduce border bias.
