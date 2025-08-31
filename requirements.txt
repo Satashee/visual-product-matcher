@@ -5,5 +5,4 @@ requests
 numpy
 torch
 torchvision
-rembg
 onnxruntime
