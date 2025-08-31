@@ -28,8 +28,8 @@ def get_backbone(name="mobilenetv3"):
         m = torchvision.models.mobilenet_v3_small(weights=weights)
         m.classifier[-1] = torch.nn.Identity()
     else:
-        weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V2
-        m = torchvision.models.resnet50(weights=weights)
+        weights = torchvision.models.ResNet18_Weights.IMAGENET1K_V1
+        m = torchvision.models.resnet18(weights=weights)
         m.fc = torch.nn.Identity()
     m.eval()
     preprocess = weights.transforms()
