@@ -31,11 +31,11 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 
 ## 🧠 How it works (quick)
 
-1. **Precompute:** `precompute.py` downloads/builds a catalog and stores:
+# 1. **Precompute:** `precompute.py` downloads/builds a catalog and stores:
    - L2-normalized **CNN feature vectors** (ResNet50/MobileNetV3).
    - L2-normalized **HSV histograms** (24D).
    - JSON is written to `data/products.json` (gitignored).
-2. **Query time:** `app.py` embeds the query image, picks dynamic **top-K** by feature cosine, then adds a small color dot-product to rerank. Results below `MIN_SHOW` are hidden.
+# 2. **Query time:** `app.py` embeds the query image, picks dynamic **top-K** by feature cosine, then adds a small color dot-product to rerank. Results below `MIN_SHOW` are hidden.
 
 ---
 
@@ -75,49 +75,57 @@ visual-product-matcher/
 ## 🚀 Quick start
 
 ### 1) Create & activate a venv, install deps
-```bash
+```
 python -m venv .venv
 
 # Windows PowerShell
+
 .venv\Scripts\Activate.ps1
+
 # macOS/Linux
-# source .venv/bin/activate
+
+source .venv/bin/activate
 
 pip install --upgrade pip
 pip install -r requirements.txt
-2) Build a dataset (pick one)
-A) Mixed online demo sources (fastest to try)
+```
+### 2) Build a dataset (pick one)
+# A) Mixed online demo sources (fastest to try)
+```
 python precompute.py --online mixed --items 600 --max-items 800 --min-size 128
-
-B) From a folder (category = parent folder name)
+```
+# B) From a folder (category = parent folder name)
+```
 catalog/
   shoes/     nike1.jpg  adidas2.jpg  ...
   bags/      tote.png   backpack.jpg ...
 
 python precompute.py --scan catalog --min-size 128
-
-C) From a CSV (columns: id,name,category,image_url)
+```
+# C) From a CSV (columns: id,name,category,image_url)
+```
 python precompute.py --csv catalog.csv --min-size 128
-
+```
 
 data/products.json will be created. It should not be committed to git.
 
-3) Run the app
+# 3) Run the app
+```
 python app.py
 # visit http://127.0.0.1:5000
-
-⚙️ Configuration & Tuning
+```
+### ⚙️ Configuration & Tuning
 
 In app.py:
-
+```
 W_FEAT / W_COLOR — feature vs. color blend (default 0.90 / 0.10).
 
 MIN_SHOW — absolute score floor (default 0.50).
 
 QUERY_MIN_SIDE — minimum query short side (default 256 px).
-
+```
 In precompute.py:
-
+```
 --online {mixed, escuelajs, fakestore, dummyjson} — pick a source.
 
 --scan <folder> — build from your images; category is parent folder.
@@ -129,17 +137,21 @@ In precompute.py:
 --min-size — skip tiny images (default 128).
 
 --backbone {resnet50, mobilenetv3} — feature extractor.
-
-Environment variables
+```
+# Environment variables
 
 Create a .env (or set in your host) if you change defaults:
 
 # Optional; overrides the default user agent used for remote fetches
+```
 HTTP_USER_AGENT="Mozilla/5.0 (Visual Product Matcher)"
+```
 # Flask
+```
 FLASK_ENV=production
+```
 
-🧪 Tips for testing
+### 🧪 Tips for testing
 
 Prefer direct image URLs that end in .jpg/.jpeg/.png/....
 
@@ -147,24 +159,25 @@ If a host blocks hotlinking, the built-in proxy /img?src=... + cache helps.
 
 Uploading a local file is always the most reliable.
 
-🐳 Deployment
-A) Render (simple)
+### 🐳 Deployment
+# A) Render (simple)
 
 Push this repo to GitHub.
 
 Create Web Service on Render → connect repo.
-
+```
 Build: pip install -r requirements.txt
 Start: gunicorn app:app --workers=2 --bind 0.0.0.0:$PORT
-
+```
 Set env FLASK_ENV=production.
 
 Add a Procfile (optional but recommended):
-
+```
 web: gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT
-
-B) Docker
+```
+# B) Docker
 # Dockerfile
+```
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -175,28 +188,29 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 CMD ["gunicorn","app:app","--workers","2","--bind","0.0.0.0:8000"]
-
+```
 
 Build & run:
-
+```
 docker build -t visual-product-matcher .
 docker run -p 8000:8000 visual-product-matcher
-
-C) Bare metal / VM
+```
+# C) Bare metal / VM
+```
 pip install -r requirements.txt
 gunicorn app:app --workers 2 --bind 0.0.0.0:8000
-
+```
 
 Note: Generate data/products.json on the server; don’t commit it.
 
-❗ Troubleshooting
-
+### ❗ Troubleshooting
+```
 “data/products.json is empty / missing”
 Run a precompute step again, e.g.:
 
 python precompute.py --online mixed --items 600
 
-
+```
 “No results” for every query
 
 Ensure your query image ≥ QUERY_MIN_SIDE (default 256 px short edge).
@@ -212,10 +226,10 @@ Confirm .gitignore excludes generated & cache files (see below).
 Slow build time
 Use fewer --items first (e.g., 400–800). Switch to MobileNetV3 for faster precompute.
 
-🧾 .gitignore (important)
+### 🧾 .gitignore (important)
 
 Make sure you don’t commit generated data or caches:
-
+```
 .venv/
 __pycache__/
 *.pyc
@@ -229,8 +243,8 @@ torch_cache/
 # Runtime caches & generated artifacts
 static/cache/
 data/products.json
-
-🧭 Roadmap
+```
+### 🧭 Roadmap
 
 Toggle backbones from UI (ResNet50 / MobileNet / CLIP/SigLIP).
 
@@ -242,12 +256,12 @@ Multi-query voting (average embeddings across shots).
 
 “Pin & Compare” UI, CSV export of results.
 
-🤝 Contributing
+### 🤝 Contributing
 
 PRs welcome!
 Please keep the app functional without private keys and avoid committing generated assets (data/products.json, caches). For UI/ranking changes, include a short before/after summary.
 
-📜 License
+### 📜 License
 
 MIT — see LICENSE
 .
