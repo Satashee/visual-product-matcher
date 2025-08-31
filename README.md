@@ -51,3 +51,44 @@ visual-product-matcher/
 └─ data/
    └─ .gitkeep                   # keeps folder in git; products.json is generated
 ```
+
+---
+
+## 🚀 Quick start
+
+### 1) Environment
+
+```
+python -m venv .venv
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+# macOS/Linux
+# source .venv/bin/activate
+
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+###2) Build a dataset (pick one)
+
+#A) Mixed online demo sources (fastest to try):
+```
+python precompute.py --online mixed --items 600 --max-items 800 --min-size 128
+
+```
+#B) From a folder (category = parent folder name):
+```
+# catalog/
+#   shoes/   img1.jpg ...
+#   bags/    img2.jpg ...
+python precompute.py --scan catalog --min-size 128
+```
+
+#C) From a CSV:
+```
+python precompute.py --csv catalog.csv --min-size 128
+```
+##3) Run the app
+```
+python app.py
+# open http://127.0.0.1:5000
+```
