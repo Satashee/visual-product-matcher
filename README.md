@@ -1,10 +1,6 @@
-# Visual Product Matcher
+<img width="1914" height="971" alt="Screenshot 2025-08-31 150219" src="https://github.com/user-attachments/assets/482c4ee5-0325-497c-936c-3451cd74e65b" /># Visual Product Matcher
 
 Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/MobileNet) + HSV color → two-stage search (feature top-K → color-aware re-rank) → clean Bootstrap UI with percent badges, progress bars, and a loading overlay.
-
-<p align="center">
-  <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
-</p>
 
 <div align="center">
 
@@ -14,16 +10,17 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
 </div>
-
-## Demo Video
-[Watch the demo!!]
 <p align="center">
-  <video width="720" controls muted playsinline>
-    <source src="https://raw.githubusercontent.com/Satashee/visual-product-matcher/main/static/demo.mp4?raw=1" type="video/mp4">
-    Sorry, your browser doesn’t support embedded videos.
-  </video>
+  <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
 </p>
 
+<p align="center">
+<img width="1914" height="971" alt="Screenshot 2025-08-31 150219" src="https://github.com/user-attachments/assets/d284f8ae-87ba-4e83-80b7-de12a2572b98" />
+</p>
+
+<p align="center">
+  <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
+</p>
 
 
 
