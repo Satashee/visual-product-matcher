@@ -1,4 +1,4 @@
-<img width="1914" height="971" alt="Screenshot 2025-08-31 150219" src="https://github.com/user-attachments/assets/482c4ee5-0325-497c-936c-3451cd74e65b" /># Visual Product Matcher
+# Visual Product Matcher
 
 Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/MobileNet) + HSV color → two-stage search (feature top-K → color-aware re-rank) → clean Bootstrap UI with percent badges, progress bars, and a loading overlay.
 
