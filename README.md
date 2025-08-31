@@ -261,7 +261,7 @@ Multi-query voting (average embeddings across shots).
 PRs welcome!
 Please keep the app functional without private keys and avoid committing generated assets (data/products.json, caches). For UI/ranking changes, include a short before/after summary.
 
-##🧩 FAQ
+## 🧩 FAQ
 
 Q: I get “No results” for everything.
 A: Check that data/products.json exists and isn’t empty. Re-run:
