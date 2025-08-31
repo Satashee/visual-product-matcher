@@ -10,6 +10,7 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
 </div>
+
 <p align="center">
   <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
 </p>
@@ -19,9 +20,8 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 </p>
 
 <p align="center">
-  <img width="1919" height="817" alt="Screenshot 2025-08-31 150204" src="https://github.com/user-attachments/assets/f7c3fd08-9a63-406f-bde2-7eadbeb2270d" />
+<img width="1472" height="810" alt="Screenshot 2025-08-31 154234" src="https://github.com/user-attachments/assets/c55ab34e-8cd5-4ea7-afef-77de33089f13" />
 </p>
-
 
 
 ---
