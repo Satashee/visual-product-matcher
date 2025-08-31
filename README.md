@@ -31,11 +31,11 @@ Upload a photo (or paste a direct image URL) → extract CNN features (ResNet50/
 
 ## 🧠 How it works (quick)
 
-# 1. **Precompute:** `precompute.py` downloads/builds a catalog and stores:
+## 1. **Precompute:** `precompute.py` downloads/builds a catalog and stores:
    - L2-normalized **CNN feature vectors** (ResNet50/MobileNetV3).
    - L2-normalized **HSV histograms** (24D).
    - JSON is written to `data/products.json` (gitignored).
-# 2. **Query time:** `app.py` embeds the query image, picks dynamic **top-K** by feature cosine, then adds a small color dot-product to rerank. Results below `MIN_SHOW` are hidden.
+## 2. **Query time:** `app.py` embeds the query image, picks dynamic **top-K** by feature cosine, then adds a small color dot-product to rerank. Results below `MIN_SHOW` are hidden.
 
 ---
 
@@ -90,11 +90,11 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 ### 2) Build a dataset (pick one)
-# A) Mixed online demo sources (fastest to try)
+## A) Mixed online demo sources (fastest to try)
 ```
 python precompute.py --online mixed --items 600 --max-items 800 --min-size 128
 ```
-# B) From a folder (category = parent folder name)
+## B) From a folder (category = parent folder name)
 ```
 catalog/
   shoes/     nike1.jpg  adidas2.jpg  ...
@@ -102,14 +102,14 @@ catalog/
 
 python precompute.py --scan catalog --min-size 128
 ```
-# C) From a CSV (columns: id,name,category,image_url)
+## C) From a CSV (columns: id,name,category,image_url)
 ```
 python precompute.py --csv catalog.csv --min-size 128
 ```
 
 data/products.json will be created. It should not be committed to git.
 
-# 3) Run the app
+## 3) Run the app
 ```
 python app.py
 # visit http://127.0.0.1:5000
